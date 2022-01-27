@@ -2,12 +2,12 @@
 
 path=$1
 
-ls -1d | grep pdf | while read line
+ls -1d ${path} | grep pdf | while read line
 do
     tempfile=$(mktemp)
 
     pdftk ${line} dump_data |
-        sed -e '' > "$tempfile"
+        sed -e '/Title/{n;s/^Info.*$/InfoValue:""/}' > "$tempfile"
     
     pdftk ${line} update_info ${tempfile} output "${line}.tmp"
 
